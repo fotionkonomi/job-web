@@ -23,7 +23,6 @@ public class Job extends UserDependentModel {
 	@NotNull
 	private Double minYearsOfExperience;
 
-	@JsonBackReference
 	@NotNull
 	private Company hiringCompany;
 

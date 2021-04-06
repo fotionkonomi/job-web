@@ -14,6 +14,6 @@ public class PageUtilImpl implements PageUtil {
 
     @Override
     public <T> String getAddPage(Class<T> clazz) {
-        return getContextPage(clazz).toLowerCase();
+        return (getContextPage(clazz) + "/add-" + getContextPage(clazz)).toLowerCase();
     }
 }

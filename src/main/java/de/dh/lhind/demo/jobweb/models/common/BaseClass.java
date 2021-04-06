@@ -6,10 +6,8 @@ import lombok.Data;
 
 @Data
 public abstract class BaseClass {
-	
-	private Long id;
+    private Long id;
     private Date createdAt;
     private Date updatedAt;
     private Boolean deleted;
-    
 }

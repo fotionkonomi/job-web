@@ -25,6 +25,5 @@ public class Company extends UserDependentModel {
 	@NotEmpty
 	private String description;
 
-	@JsonManagedReference
 	private List<Job> jobs = new ArrayList<>();
 }

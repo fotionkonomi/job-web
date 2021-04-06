@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="/fragments/common/head.html :: headerfiles">
+</head>
+<body>
+
+<div id="wrapper">
+    <ul th:replace="/fragments/common/sidebar.html :: sidebar"></ul>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="/fragments/common/topbar.html :: topbar"></nav>
+            <table id="jobs" border="1" style="width: 90%;">
+                <tr>
+                    <th th:text="#{job.jobtitle}">Job Title</th>
+                    <th th:text="#{job.company}">Job Company</th>
+                    <th th:text="#{job.minYearsOfExperience}">Job minYearsOfExperience</th>
+                    <th th:text="#{job.wage}">Job wage</th>
+                    <th th:text="#{global.description}">Description</th>
+                    <th th:text="#{job.jobType}">Job type</th>
+                    <th th:text="#{global.update}">UPDATE</th>
+                    <th th:text="#{global.delete}">DELETE</th>
+                </tr>
+                <tr th:each="job : ${jobs}" th:value="${job}" >
+                    <td th:text="${job.jobTitle}">Job Title</td>
+                    <td th:text="${job.hiringCompany.name}">Company Name</td>
+                    <td th:text="${job.minYearsOfExperience}">MinYearsOfExperience</td>
+                    <td th:text="${job.wage}">Wage</td>
+                    <td th:text="${job.description}">description</td>
+                    <td th:text="${job.jobType}">Job Type</td>
+                    <td><a th:href="${job.id}" th:text="#{global.update}">UPDATE</a></td>
+                    <td><a class="delete-btn" th:id="${job.id}" th:href="${job.id}" th:text="#{global.delete}">DELETE</a></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:insert="/fragments/common/footer.html :: footer"></div>
+
+<div th:insert="/fragments/common/scripts.html :: scripts"></div>
+
+</body>
+
+<script>
+    $(document).ready(function () {
+        $('select.mdb-select').selectize({
+            sortField: 'text'
+        });
+
+        $("#jobs").on("click", ".delete-btn", function (e) {
+            e.preventDefault();
+            var button = $(this);
+            let isConfirm = confirm("Are you sure?");
+                    if (isConfirm) {
+
+                        $.ajax({
+                            url: "/ajax/job/" + button.attr("id"),
+                            method: "DELETE",
+                            success: function () {
+                                $(button).closest('tr').css('background', 'tomato');
+
+                                $(button).closest('tr').fadeOut(1000, function () {
+                                    $(this).remove();
+                                });
+                            },
+                            error: function (errormessage) {
+                                console.log(errormessage);
+                            }
+                        });
+                    }
+
+
+        });
+    });
+
+</script>
+
+
+</html>

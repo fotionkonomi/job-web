@@ -5,14 +5,13 @@ import org.springframework.http.ResponseEntity;
 
 public interface RestCaller {
     <T> ResponseEntity<T> getExchange(String url,
-                                      Class<T> responseType, boolean shouldBeAuth);
+                                      Class<T> responseType);
 
     <T, K> ResponseEntity<T> postExchange(String url, HttpEntity<K> requestEntity,
-                                          Class<T> responseType, boolean shouldBeAuth);
+                                          Class<T> responseType);
 
-    <T> ResponseEntity<T> deleteExchange(String url,
-                                      Class<T> responseType, boolean shouldBeAuth);
+    ResponseEntity<Void> deleteExchange(String url);
 
     <T, K> ResponseEntity<T> putExchange(String url, HttpEntity<K> requestEntity,
-                                          Class<T> responseType, boolean shouldBeAuth);
+                                          Class<T> responseType);
 }

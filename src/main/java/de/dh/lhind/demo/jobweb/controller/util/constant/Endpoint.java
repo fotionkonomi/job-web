@@ -17,4 +17,12 @@ public class Endpoint {
     @Value("${endpoint.find.user.email}")
     private String findUserByEmailEndpoint;
 
+    @Value("${endpoint.user.register}")
+    private String signupEndpoint;
+
+    @Value("${endpoint.company.list}")
+    private String listOfCompaniesEndpoint;
+
+    @Value("${endpoint.job}")
+    private String jobEndpoint;
 }

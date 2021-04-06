@@ -17,19 +17,14 @@ public abstract class AbstractController<T extends BaseClass> {
     private PageUtil pageUtil;
 
     @Autowired
-    private RestCaller restCaller;
-
-    private Class<T> clazz;
-
-    public AbstractController(Class<T> clazz) {
-        this.clazz = clazz;
-    }
+    protected RestCaller restCaller;
 
     public String addPage(Model model) {
-        return pageUtil.getAddPage(this.getClass());
+        String page = pageUtil.getAddPage(this.getClass());
+        return page;
     }
 
-    public String add(T model, Errors errors, boolean shouldBeAuth) {
+    public String add(T model, Errors errors) {
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> log.error(error.getDefaultMessage()));
             String addPage =  pageUtil.getAddPage(this.getClass());
@@ -38,10 +33,11 @@ public abstract class AbstractController<T extends BaseClass> {
 
         HttpEntity<T> body = new HttpEntity<>(model);
 
-        HttpEntity<Void> response = restCaller.postExchange("/" + pageUtil.getContextPage(clazz), body, Void.class, shouldBeAuth);
+        HttpEntity<Void> response = restCaller.postExchange("/" + pageUtil.getContextPage(this.getClass()), body, Void.class);
         HttpHeaders header = response.getHeaders();
         log.info("Location: " + header.getLocation());
-        return "redirect:/";
+        return "redirect:/" + pageUtil.getContextPage(this.getClass()) + "/list";
 
     }
+
 }

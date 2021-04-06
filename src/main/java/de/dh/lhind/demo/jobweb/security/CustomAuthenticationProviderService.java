@@ -44,7 +44,7 @@ public class CustomAuthenticationProviderService implements AuthenticationProvid
         AuthenticationRequest authRequest = new AuthenticationRequest(email, password);
         ResponseEntity<AuthenticationResponse> authResponse = restOperations.postForEntity(endpoint.getRemoteRootUri() + endpoint.getAuthenticationEndpoint(), new HttpEntity<>(authRequest), AuthenticationResponse.class);
         if (authResponse.getStatusCode() == HttpStatus.OK) {
-            String jwt = authResponse.getBody().getJwt();
+            String jwt = authResponse.getBody().getToken();
             if (!StringUtils.isEmpty(jwt)) {
                 HttpHeaders headers = new HttpHeaders();
                 headers.set("authorization", "Bearer " + jwt);
