@@ -1,9 +1,6 @@
 package de.dh.lhind.demo.jobweb.models;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import de.dh.lhind.demo.jobweb.models.common.BaseClass;
 import lombok.AllArgsConstructor;
@@ -32,8 +29,11 @@ public class User extends BaseClass {
 
     @Size(max = 255)
     @NotEmpty
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$")
     private String password;
 
     @NotNull
     private Role role;
+
+    private String token;
 }
