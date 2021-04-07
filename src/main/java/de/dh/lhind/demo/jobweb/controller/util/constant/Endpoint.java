@@ -25,4 +25,16 @@ public class Endpoint {
 
     @Value("${endpoint.job}")
     private String jobEndpoint;
+
+    @Value("${endpoint.job.filtered}")
+    private String jobFilteredEndpoint;
+
+    @Value("${endpoint.job.topTen}")
+    private String topTenJobsEndpoint;
+
+    @Value("${endpoint.job.apply}")
+    private String applyForJobEndpoint;
+
+    @Value("${endpoint.job.myApplications}")
+    private String myApplicationsEndpoint;
 }

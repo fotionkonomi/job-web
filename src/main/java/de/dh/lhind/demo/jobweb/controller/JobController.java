@@ -5,7 +5,6 @@ import de.dh.lhind.demo.jobweb.controller.util.constant.Endpoint;
 import de.dh.lhind.demo.jobweb.models.Company;
 import de.dh.lhind.demo.jobweb.models.Job;
 import de.dh.lhind.demo.jobweb.models.enums.JobType;
-import de.dh.lhind.demo.jobweb.models.enums.RoleEnum;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 @Controller
 @RequestMapping("/job")
@@ -50,7 +48,6 @@ public class JobController extends AbstractController<Job> {
 
     @GetMapping("/add")
     public String add(Model model) {
-        model.addAttribute("method", "POST");
         return super.addPage(model);
     }
 
@@ -59,16 +56,15 @@ public class JobController extends AbstractController<Job> {
         return super.add(job, errors);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/update/{id}")
     public String update(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("method", "PUT");
         ResponseEntity<Job> jobResponseEntity = restCaller.getExchange(endpoint.getJobEndpoint() + "/" + id, Job.class);
         Job job = jobResponseEntity.getBody();
         model.addAttribute("job", job);
         return "job/add-job";
     }
 
-    @PostMapping("/{id}")
+    @PostMapping("/update/{id}")
     public String update(@ModelAttribute("job") @Valid Job job, Errors errors) {
         if (errors.hasErrors()) {
             errors.getAllErrors().forEach(error -> log.error(error.getDefaultMessage()));
@@ -81,8 +77,7 @@ public class JobController extends AbstractController<Job> {
         HttpEntity<Void> response = restCaller.putExchange("/" + pageUtil.getContextPage(this.getClass()), body, Void.class);
         HttpHeaders header = response.getHeaders();
         log.info("Location: " + header.getLocation());
-        return "redirect:" + header.getLocation().toString().toLowerCase();
-
+        return "redirect:/" + pageUtil.getContextPage(this.getClass()) + "/list";
     }
 
     @GetMapping("/list")
@@ -91,5 +86,29 @@ public class JobController extends AbstractController<Job> {
         Collection<Job> jobs = Arrays.asList(jobsResponseEntity.getBody());
         model.addAttribute("jobs", jobs);
         return "job/jobs";
+    }
+
+    @GetMapping("/search")
+    public String jobsSearched(@RequestParam("query") String query, Model model) {
+        ResponseEntity<Job[]> jobsResponseEntity = restCaller.getExchange(endpoint.getJobFilteredEndpoint() + "?query=" + query, Job[].class);
+        Collection<Job> jobs = Arrays.asList(jobsResponseEntity.getBody());
+        model.addAttribute("jobs", jobs);
+        return "job/jobs";
+    }
+
+    @GetMapping("/topTen")
+    public String topTenJobs(Model model) {
+        ResponseEntity<Job[]> jobsResponseEntity = restCaller.getExchange(endpoint.getTopTenJobsEndpoint(), Job[].class);
+        Collection<Job> jobs = Arrays.asList(jobsResponseEntity.getBody());
+        model.addAttribute("jobs", jobs);
+        return "job/jobs";
+    }
+
+    @GetMapping("/myApplications")
+    public String myApplications(Model model) {
+        ResponseEntity<Job[]> jobsResponseEntity = restCaller.getExchange(endpoint.getMyApplicationsEndpoint(), Job[].class);
+        Collection<Job> jobs = Arrays.asList(jobsResponseEntity.getBody());
+        model.addAttribute("jobs", jobs);
+        return "job/myApplications";
     }
 }

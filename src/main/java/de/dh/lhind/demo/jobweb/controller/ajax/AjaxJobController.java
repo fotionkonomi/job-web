@@ -2,11 +2,10 @@ package de.dh.lhind.demo.jobweb.controller.ajax;
 
 import de.dh.lhind.demo.jobweb.controller.util.RestCaller;
 import de.dh.lhind.demo.jobweb.controller.util.constant.Endpoint;
+import de.dh.lhind.demo.jobweb.models.Job;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ajax/job")
@@ -21,5 +20,11 @@ public class AjaxJobController {
     @DeleteMapping("/{id}")
     public void deleteJob(@PathVariable("id") Long id) {
         restCaller.deleteExchange(endpoint.getJobEndpoint() + "/" + id);
+    }
+
+    @PutMapping("/apply/{id}")
+    public void applyForJob(@PathVariable("id") Long id) {
+        HttpEntity<Long> body = new HttpEntity<>(id);
+        restCaller.putExchange(endpoint.getApplyForJobEndpoint(), body, Job.class);
     }
 }

@@ -20,7 +20,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeRequests().antMatchers("/css/**").permitAll()
+                .authorizeRequests()
+                .antMatchers("/job/list").hasAuthority("ADMIN")
+                .antMatchers("/job/update/**").hasAuthority("ADMIN")
+                .antMatchers("/job/add").hasAuthority("ADMIN")
+                .antMatchers("/job/myApplications").hasAuthority("USER")
+                .antMatchers("/job/topTen").permitAll()
+                .antMatchers("/job/search").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .and().exceptionHandling().accessDeniedPage("/accessDenied")
                 .and().authorizeRequests().antMatchers("/fonts/**").permitAll()
                 .and().authorizeRequests().antMatchers("/js/**").permitAll()
                 .and().authorizeRequests().antMatchers("/vendor/**").permitAll()
@@ -29,10 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
                 .antMatchers("/login").permitAll()
-                .anyRequest().authenticated().and().formLogin().loginPage("/login")
+                .anyRequest().authenticated().and().formLogin().loginPage("/login").defaultSuccessUrl("/job/topTen", true)
 
                 .and().logout().invalidateHttpSession(true).clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
                 .permitAll();
     }
+
 }

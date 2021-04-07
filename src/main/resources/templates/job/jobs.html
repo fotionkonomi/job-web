@@ -17,8 +17,9 @@
                     <th th:text="#{job.wage}">Job wage</th>
                     <th th:text="#{global.description}">Description</th>
                     <th th:text="#{job.jobType}">Job type</th>
-                    <th th:text="#{global.update}">UPDATE</th>
-                    <th th:text="#{global.delete}">DELETE</th>
+                    <th sec:authorize="hasAuthority('ADMIN')" th:text="#{global.update}">UPDATE</th>
+                    <th sec:authorize="hasAuthority('ADMIN')" th:text="#{global.delete}">DELETE</th>
+                    <th sec:authorize="hasAuthority('USER')" th:text="#{job.apply}">APPLY</th>
                 </tr>
                 <tr th:each="job : ${jobs}" th:value="${job}" >
                     <td th:text="${job.jobTitle}">Job Title</td>
@@ -27,8 +28,9 @@
                     <td th:text="${job.wage}">Wage</td>
                     <td th:text="${job.description}">description</td>
                     <td th:text="${job.jobType}">Job Type</td>
-                    <td><a th:href="${job.id}" th:text="#{global.update}">UPDATE</a></td>
-                    <td><a class="delete-btn" th:id="${job.id}" th:href="${job.id}" th:text="#{global.delete}">DELETE</a></td>
+                    <td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{'/job/update/' + ${job.id}}" th:text="#{global.update}">UPDATE</a></td>
+                    <td sec:authorize="hasAuthority('ADMIN')"><a class="delete-btn" th:id="${job.id}" th:href="${job.id}" th:text="#{global.delete}">DELETE</a></td>
+                    <td sec:authorize="hasAuthority('USER')"><a class="apply-btn" th:id="${job.id}" th:href="@{'/job/apply/' + ${job.id}}" th:text="#{job.apply}">APPLY</a></td>
                 </tr>
             </table>
         </div>
@@ -68,6 +70,31 @@
                             }
                         });
                     }
+
+
+        });
+
+        $("#jobs").on("click", ".apply-btn", function (e) {
+            e.preventDefault();
+            var button = $(this);
+            let isConfirm = confirm("Are you sure?");
+            if (isConfirm) {
+
+                $.ajax({
+                    url: "/ajax/job/apply/" + button.attr("id"),
+                    method: "PUT",
+                    success: function () {
+                        $(button).closest('tr').css('background', 'green');
+
+                        $(button).closest('tr').fadeOut(1000, function () {
+                            $(this).remove();
+                        });
+                    },
+                    error: function (errormessage) {
+                        console.log(errormessage);
+                    }
+                });
+            }
 
 
         });

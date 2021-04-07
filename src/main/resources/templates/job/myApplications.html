@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:insert="/fragments/common/head.html :: headerfiles">
+</head>
+<body>
+
+<div id="wrapper">
+    <ul th:replace="/fragments/common/sidebar.html :: sidebar"></ul>
+    <div id="content-wrapper" class="d-flex flex-column">
+        <div id="content">
+            <nav th:replace="/fragments/common/topbar.html :: topbar"></nav>
+            <table id="jobs" border="1" style="width: 90%;">
+                <tr>
+                    <th th:text="#{job.jobtitle}">Job Title</th>
+                    <th th:text="#{job.company}">Job Company</th>
+                    <th th:text="#{job.minYearsOfExperience}">Job minYearsOfExperience</th>
+                    <th th:text="#{job.wage}">Job wage</th>
+                    <th th:text="#{global.description}">Description</th>
+                    <th th:text="#{job.jobType}">Job type</th>
+                </tr>
+                <tr th:each="job : ${jobs}" th:value="${job}" >
+                    <td th:text="${job.jobTitle}">Job Title</td>
+                    <td th:text="${job.hiringCompany.name}">Company Name</td>
+                    <td th:text="${job.minYearsOfExperience}">MinYearsOfExperience</td>
+                    <td th:text="${job.wage}">Wage</td>
+                    <td th:text="${job.description}">description</td>
+                    <td th:text="${job.jobType}">Job Type</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div th:insert="/fragments/common/footer.html :: footer"></div>
+
+<div th:insert="/fragments/common/scripts.html :: scripts"></div>
+
+</body>
+
+
+
+</html>
